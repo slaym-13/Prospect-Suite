@@ -128,56 +128,70 @@ function deleteUser(email) {
 const DEFAULT_ADMIN = { email: 'admin@prospecthub.com', password: 'adminPH' };
 
 /**
- * Make sure an administrator exists at startup.
+ * Make sure the administrator account exists at startup.
  *
- * This runs on every boot because a host may hand us an empty disk each deploy.
- * On a database that already has accounts but no admin, the oldest one is promoted
- * rather than a second account appearing from nowhere.
+ * This runs on every boot because a host may hand us an empty disk each deploy. The
+ * account named by ADMIN_EMAIL is created if it is missing and promoted if it is not
+ * an administrator, so the documented login always works. An existing password is
+ * never overwritten.
  */
 function seedAdmin() {
   const email = (process.env.ADMIN_EMAIL || DEFAULT_ADMIN.email).trim().toLowerCase();
   const password = process.env.ADMIN_PASSWORD || DEFAULT_ADMIN.password;
   const users = readUsers();
+  const hadAccounts = users.length > 0;
+  const hadAdmin = users.some((u) => u.role === 'admin');
+  const existing = users.find((u) => u.email === email);
 
-  if (!users.length) {
-    createUser(email, password, { role: 'admin', allowShortPassword: true });
-    if (password === DEFAULT_ADMIN.password) {
-      // Flag it so later boots can keep warning without re-hashing to find out.
-      const list = readUsers();
-      list.find((u) => u.email === email).defaultPassword = true;
-      writeUsers(list);
-      console.warn(
-        `
+  if (existing) {
+    if (existing.role !== 'admin') {
+      existing.role = 'admin';
+      writeUsers(users);
+      console.log(`Promoted ${email} to administrator.`);
+    }
+    if (existing.defaultPassword) {
+      console.warn(`  ${email} still uses the development password. Set ADMIN_PASSWORD, or change it on the Admin page.`);
+    }
+    return { email, created: false };
+  }
+
+  createUser(email, password, { role: 'admin', allowShortPassword: true });
+  if (password === DEFAULT_ADMIN.password) {
+    // Flag it so later boots can keep warning without re-hashing to find out.
+    const list = readUsers();
+    list.find((u) => u.email === email).defaultPassword = true;
+    writeUsers(list);
+    console.warn(
+      `
   Development administrator created` +
-        `
+      `
     email:    ${email}` +
-        `
+      `
     password: ${password}` +
-        `
+      `
   Set ADMIN_EMAIL and ADMIN_PASSWORD before deploying this.
 `
-      );
-    } else {
-      console.log(`Created the administrator account ${email}.`);
+    );
+  } else {
+    console.log(`Created the administrator account ${email}.`);
+  }
+
+  // An install that predates roles keeps its original owner as an administrator,
+  // rather than being quietly demoted by the upgrade.
+  if (hadAccounts && !hadAdmin) {
+    const list = readUsers();
+    const oldest = list
+      .filter((u) => u.email !== email)
+      .sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)))[0];
+    if (oldest) {
+      oldest.role = 'admin';
+      writeUsers(list);
+      console.log(`Kept ${oldest.email} as an administrator.`);
     }
-    return { created: true, email };
   }
-
-  // Still on the shipped password: say so on every start, not just the first.
-  const stale = users.find((u) => u.defaultPassword);
-  if (stale) {
-    console.warn(`  ${stale.email} still uses the development password. Set ADMIN_PASSWORD, or change it on the Admin page.`);
-  }
-
-  if (!users.some((u) => u.role === 'admin')) {
-    const oldest = users.slice().sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)))[0];
-    oldest.role = 'admin';
-    writeUsers(users);
-    console.log(`Promoted ${oldest.email} to administrator.`);
-    return { promoted: true, email: oldest.email };
-  }
-  return { created: false };
+  return { email, created: true };
 }
+
 const DUMMY_HASH = bcrypt.hashSync('not-a-real-password', 12);
 async function checkLogin(email, password) {
   email = String(email || '').trim().toLowerCase();

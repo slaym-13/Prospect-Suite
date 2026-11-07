@@ -1,0 +1,200 @@
+{
+  "rows": 282,
+  "funnel": {
+    "Entreprises collectées": 282,
+    "Avec un téléphone": 274,
+    "Joignables par WhatsApp": 196,
+    "Avec un site web": 220,
+    "Avec un email": 141
+  },
+  "sectors": {
+    "Autre": {
+      "total": 73,
+      "sans_site": 20,
+      "note": 4.71,
+      "avis": 6.0,
+      "score": 45.18,
+      "part_sans_site": 0.27
+    },
+    "Digital & marketing": {
+      "total": 68,
+      "sans_site": 9,
+      "note": 4.76,
+      "avis": 10.0,
+      "score": 54.37,
+      "part_sans_site": 0.13
+    },
+    "Hôtellerie": {
+      "total": 47,
+      "sans_site": 7,
+      "note": 4.27,
+      "avis": 812.0,
+      "score": 70.49,
+      "part_sans_site": 0.15
+    },
+    "Commerce": {
+      "total": 37,
+      "sans_site": 9,
+      "note": 4.69,
+      "avis": 33.0,
+      "score": 46.35,
+      "part_sans_site": 0.24
+    },
+    "Informatique & IT": {
+      "total": 13,
+      "sans_site": 2,
+      "note": 4.64,
+      "avis": 13.0,
+      "score": 56.46,
+      "part_sans_site": 0.15
+    },
+    "Voyage & tourisme": {
+      "total": 11,
+      "sans_site": 2,
+      "note": 4.56,
+      "avis": 70.0,
+      "score": 75.73,
+      "part_sans_site": 0.18
+    },
+    "Immobilier": {
+      "total": 9,
+      "sans_site": 1,
+      "note": 4.63,
+      "avis": 19.0,
+      "score": 67.89,
+      "part_sans_site": 0.11
+    },
+    "Conseil": {
+      "total": 8,
+      "sans_site": 4,
+      "note": 4.66,
+      "avis": 2.5,
+      "score": 53.75,
+      "part_sans_site": 0.5
+    },
+    "Formation": {
+      "total": 5,
+      "sans_site": 1,
+      "note": 4.73,
+      "avis": 107.0,
+      "score": 62.4,
+      "part_sans_site": 0.2
+    },
+    "E-commerce & livraison": {
+      "total": 4,
+      "sans_site": 4,
+      "note": 4.82,
+      "avis": 2.0,
+      "score": 72.75,
+      "part_sans_site": 1.0
+    },
+    "Industrie": {
+      "total": 2,
+      "sans_site": 1,
+      "note": 4.69,
+      "avis": 33.5,
+      "score": 60.5,
+      "part_sans_site": 0.5
+    },
+    "Services professionnels": {
+      "total": 2,
+      "sans_site": 0,
+      "note": 4.72,
+      "avis": 60.5,
+      "score": 55.0,
+      "part_sans_site": 0.0
+    },
+    "Intelligence artificielle": {
+      "total": 1,
+      "sans_site": 1,
+      "note": NaN,
+      "avis": 0.0,
+      "score": 64.0,
+      "part_sans_site": 1.0
+    },
+    "Santé": {
+      "total": 1,
+      "sans_site": 0,
+      "note": 4.89,
+      "avis": 23.0,
+      "score": 67.0,
+      "part_sans_site": 0.0
+    },
+    "Restauration": {
+      "total": 1,
+      "sans_site": 1,
+      "note": 4.4,
+      "avis": 697.0,
+      "score": 100.0,
+      "part_sans_site": 1.0
+    }
+  },
+  "reviews": {
+    "median": 18,
+    "mean": 280.6,
+    "p90": 612,
+    "max": 6857,
+    "share_under_50": 0.67
+  },
+  "score": {
+    "mean": 55.7,
+    "bands": {
+      "faible": 73,
+      "moyen": 124,
+      "élevé": 85
+    },
+    "top10": [
+      {
+        "nom": "CONFIDENTIAL SUITES & LOUNGE",
+        "secteur": "Restauration",
+        "score": 100
+      },
+      {
+        "nom": "Aicha Voyage Marrakech",
+        "secteur": "Voyage & tourisme",
+        "score": 93
+      },
+      {
+        "nom": "Hôtel Les Idrissides",
+        "secteur": "Hôtellerie",
+        "score": 92
+      },
+      {
+        "nom": "MAISON D’HÔTE DAR ALBIDAWI",
+        "secteur": "Hôtellerie",
+        "score": 91
+      },
+      {
+        "nom": "Great Travel",
+        "secteur": "Voyage & tourisme",
+        "score": 90
+      },
+      {
+        "nom": "Forcelog Marrakech- Livraison e-commerce au Maroc",
+        "secteur": "E-commerce & livraison",
+        "score": 90
+      },
+      {
+        "nom": "Hotel des Amis",
+        "secteur": "Hôtellerie",
+        "score": 87
+      },
+      {
+        "nom": "Real Estate Agency",
+        "secteur": "Immobilier",
+        "score": 85
+      },
+      {
+        "nom": "maison TZ",
+        "secteur": "Hôtellerie",
+        "score": 85
+      },
+      {
+        "nom": "South Computer",
+        "secteur": "Industrie",
+        "score": 83
+      }
+    ]
+  },
+  "correlation_reviews_rating": -0.324
+}

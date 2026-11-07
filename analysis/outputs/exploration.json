@@ -1,0 +1,85 @@
+{
+  "rows": 283,
+  "columns": [
+    "place_id",
+    "nom",
+    "adresse",
+    "email",
+    "telephone",
+    "site_web",
+    "google_maps",
+    "categorie",
+    "note",
+    "nombre_avis",
+    "latitude",
+    "longitude",
+    "query"
+  ],
+  "missing": {
+    "place_id": 0,
+    "nom": 0,
+    "adresse": 0,
+    "email": 142,
+    "telephone": 7,
+    "site_web": 62,
+    "google_maps": 0,
+    "categorie": 18,
+    "note": 18,
+    "nombre_avis": 18,
+    "latitude": 0,
+    "longitude": 0,
+    "query": 0
+  },
+  "duplicates": {
+    "exact_rows": 0,
+    "place_id": 0,
+    "normalised_name": 1
+  },
+  "rating": {
+    "missing": 18,
+    "mean": 4.67,
+    "median": 4.9,
+    "perfect_but_thin": 34
+  },
+  "reviews": {
+    "missing": 18,
+    "median": 22.0,
+    "max": 6857,
+    "total": 79125
+  },
+  "phone": {
+    "present": 276,
+    "non_standard_format": 5
+  },
+  "website": {
+    "present": 221,
+    "missing": 62,
+    "http_not_https": 59,
+    "distinct_hosts": 216
+  },
+  "email": {
+    "present": 141,
+    "missing": 142,
+    "malformed": 0,
+    "shared_addresses": 2
+  },
+  "category": {
+    "distinct": 21,
+    "missing": 18,
+    "largest": "Services",
+    "largest_share": 0.505
+  },
+  "geo": {
+    "outside_marrakech": 1
+  },
+  "collection": {
+    "queries": 14,
+    "top": {
+      "hôtel groupe Data BI Marrakech": 48,
+      "AI agency Marrakech Morocco": 45,
+      "société informatique Marrakech": 42,
+      "entreprise e-commerce Marrakech": 39,
+      "digital agency AI Marrakech Morocco": 38
+    }
+  }
+}

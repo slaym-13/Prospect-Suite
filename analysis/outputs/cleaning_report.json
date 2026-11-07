@@ -1,0 +1,84 @@
+{
+  "rows_in": 283,
+  "steps": [
+    {
+      "step": "trimmed whitespace / empties",
+      "rows_affected": 0,
+      "detail": ""
+    },
+    {
+      "step": "dropped duplicate companies",
+      "rows_affected": 1,
+      "detail": "1 matched on normalised name"
+    },
+    {
+      "step": "standardised phone numbers",
+      "rows_affected": 1,
+      "detail": "1 could not be parsed"
+    },
+    {
+      "step": "flagged mobile numbers",
+      "rows_affected": 196,
+      "detail": "WhatsApp reachable"
+    },
+    {
+      "step": "normalised website URLs",
+      "rows_affected": 213,
+      "detail": "https, lowercase host, no trailing slash"
+    },
+    {
+      "step": "validated email addresses",
+      "rows_affected": 0,
+      "detail": "2 address(es) shared by several companies"
+    },
+    {
+      "step": "reviews: missing means zero",
+      "rows_affected": 18,
+      "detail": "rating left missing, not invented"
+    },
+    {
+      "step": "weighted rating added",
+      "rows_affected": 34,
+      "detail": "perfect-but-thin scores pulled toward 4.67"
+    },
+    {
+      "step": "re-derived business sector",
+      "rows_affected": 88,
+      "detail": "from company names, 'Services' was 51%"
+    },
+    {
+      "step": "cleared out-of-area coordinates",
+      "rows_affected": 1,
+      "detail": "outside the Marrakech box"
+    },
+    {
+      "step": "contactability flag",
+      "rows_affected": 274,
+      "detail": "has a phone or an email"
+    }
+  ],
+  "rows_out": 282,
+  "columns_out": [
+    "place_id",
+    "nom",
+    "secteur",
+    "categorie",
+    "adresse",
+    "telephone",
+    "mobile",
+    "email",
+    "has_email",
+    "email_shared",
+    "site_web",
+    "has_website",
+    "note",
+    "note_ajustee",
+    "unrated",
+    "nombre_avis",
+    "latitude",
+    "longitude",
+    "joignable",
+    "google_maps",
+    "query"
+  ]
+}

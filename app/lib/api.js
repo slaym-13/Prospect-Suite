@@ -7,6 +7,7 @@ const ai = require('./ai');
 const mailer = require('./mailer');
 const jobs = require('./jobs');
 const assistant = require('./assistant');
+const { createAdminApi } = require('./admin');
 
 const DAY = 24 * 3600 * 1000;
 const clip = (s, n) => String(s == null ? '' : s).slice(0, n);
@@ -54,9 +55,12 @@ function createApi(opts = {}) {
   r.use((req, res, next) => { const s = auth.sessionFrom(req); if (!s) return res.status(401).json({ error: 'Please sign in.' }); req.user = s.u; next(); });
 
   r.get('/config', (req, res) => res.json({
-    user: req.user, ai: auth.hasAiKey(req.user), model: ai.MODEL(), smtp: mailer.mode(),
+    user: req.user, isAdmin: auth.isAdmin(req.user),
+    ai: auth.hasAiKey(req.user), model: ai.MODEL(), smtp: mailer.mode(),
     places: !!process.env.GOOGLE_PLACES_API_KEY, statuses: store.STATUSES
   }));
+
+  r.use('/admin', createAdminApi());
 
   /* ----- the signed-in person's own Gemini key ----- */
   r.put('/ai-key', async (req, res) => {

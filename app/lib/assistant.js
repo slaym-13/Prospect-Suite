@@ -43,6 +43,13 @@ website, category, rating and review count.
   first in each column, then the best scores. The search box at the top filters every
   column at once, and a column loads 25 cards at a time.
 - **Outbox** - every message the app tried to send, newest first, with the result.
+- **Admin** - administrators only, and the tab is hidden from everyone else. Three
+  parts: headline counts; Accounts, to add people, change a password, grant or remove
+  administrator rights and delete an account; and Company records, to correct a
+  company's name, category, address, phone, email, website, rating or review count,
+  add a company by hand, delete one, or reload the dataset that ships with the app.
+  Editing a record there is different from the Companies page, which changes a
+  company's status, notes and follow-ups rather than its underlying data.
 - **Settings** - who you are, sending limits, the AI key, the scoring weights and the
   category tiers. The Fit score panel shows, live as you drag a slider, how many
   companies would land in each band. The Category tiers panel lists every category

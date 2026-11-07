@@ -15,7 +15,8 @@ const TABS = [
   ['/companies', 'Companies'],
   ['/pipeline', 'Pipeline'],
   ['/outbox', 'Outbox'],
-  ['/settings', 'Settings']
+  ['/settings', 'Settings'],
+  ['/admin', 'Admin', 'admin']   // only shown to administrators
 ];
 
 function Logo() {
@@ -51,7 +52,7 @@ export function AppLayout() {
           </div>
 
           <nav aria-label="Sections" className="order-3 flex w-full flex-1 basis-full gap-1 overflow-x-auto md:order-none md:w-auto md:basis-auto [scrollbar-width:none]">
-            {TABS.map(([to, label]) => (
+            {TABS.filter(([, , onlyFor]) => !onlyFor || config?.isAdmin).map(([to, label]) => (
               <NavLink
                 key={to}
                 to={to}

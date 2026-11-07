@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const express = require('express');
 const store = require('./lib/store');
+const auth = require('./lib/auth');
 const { createApi } = require('./lib/api');
 
 function createApp(opts = {}) {
@@ -45,6 +46,10 @@ function createApp(opts = {}) {
     if (req.path.startsWith('/api')) return res.status(err.status || 500).json({ error: err.status === 400 ? 'Bad request.' : 'Something went wrong on the server.' });
     res.status(500).send('Server error');
   });
+
+  // An administrator must exist before anyone can sign in. This lives here rather
+  // than in server.js because a serverless host never runs server.js.
+  auth.seedAdmin();
 
   // First run: import the companies that ship with the app. On a host where the only
   // writable place is a scratch directory, DATA_DIR points there and starts empty, so

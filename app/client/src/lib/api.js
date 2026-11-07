@@ -56,5 +56,16 @@ export const api = {
   outbox: () => get('/api/outbox'),
   currentJob: () => get('/api/jobs/current'),
   startJob: (type, scope) => request('POST', '/api/jobs/start', { type, scope }),
-  cancelJob: () => request('POST', '/api/jobs/cancel', {})
+  cancelJob: () => request('POST', '/api/jobs/cancel', {}),
+
+  // administration
+  adminStats: () => get('/api/admin/stats'),
+  adminUsers: () => get('/api/admin/users'),
+  adminCreateUser: (user) => request('POST', '/api/admin/users', user),
+  adminUpdateUser: (email, patch) => request('PATCH', `/api/admin/users/${encodeURIComponent(email)}`, patch),
+  adminDeleteUser: (email) => request('DELETE', `/api/admin/users/${encodeURIComponent(email)}`),
+  adminCreateLead: (lead) => request('POST', '/api/admin/leads', lead),
+  adminUpdateLead: (id, patch) => request('PATCH', `/api/admin/leads/${encodeURIComponent(id)}`, patch),
+  adminDeleteLead: (id) => request('DELETE', `/api/admin/leads/${encodeURIComponent(id)}`),
+  adminReset: () => request('POST', '/api/admin/reset', { confirm: 'reset' })
 };

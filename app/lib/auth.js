@@ -62,13 +62,99 @@ function getAiKey(email) {
 }
 function hasAiKey(email) { return !!getAiKey(email); }
 
-function createUser(email, password) {
+function createUser(email, password, { role = 'user', allowShortPassword = false } = {}) {
   email = String(email || '').trim().toLowerCase();
   if (!validEmail(email)) throw new Error('Enter a valid email address.');
-  if (typeof password !== 'string' || password.length < MIN_PASSWORD) throw new Error(`The password needs at least ${MIN_PASSWORD} characters.`);
+  if (typeof password !== 'string' || (!allowShortPassword && password.length < MIN_PASSWORD)) {
+    throw new Error(`The password needs at least ${MIN_PASSWORD} characters.`);
+  }
   const users = readUsers().filter((u) => u.email !== email);
-  users.push({ email, hash: bcrypt.hashSync(password, 12), createdAt: new Date().toISOString() });
+  users.push({
+    email,
+    hash: bcrypt.hashSync(password, 12),
+    role: role === 'admin' ? 'admin' : 'user',
+    createdAt: new Date().toISOString()
+  });
   writeUsers(users);
+}
+
+/* ---------- accounts and roles ---------- */
+
+/** Everything the admin screen may see. Never the hash, never the AI key. */
+function listUsers() {
+  return readUsers().map((u) => ({
+    email: u.email,
+    role: u.role === 'admin' ? 'admin' : 'user',
+    createdAt: u.createdAt || null,
+    hasAiKey: !!u.aiKey
+  }));
+}
+function getUser(email) { return readUsers().find((u) => u.email === String(email || '').trim().toLowerCase()) || null; }
+function isAdmin(email) { const u = getUser(email); return !!u && u.role === 'admin'; }
+function countAdmins() { return readUsers().filter((u) => u.role === 'admin').length; }
+
+function setPassword(email, password) {
+  if (typeof password !== 'string' || password.length < MIN_PASSWORD) {
+    throw new Error(`The password needs at least ${MIN_PASSWORD} characters.`);
+  }
+  const users = readUsers();
+  const u = users.find((x) => x.email === email);
+  if (!u) throw new Error('No such account.');
+  u.hash = bcrypt.hashSync(password, 12);
+  writeUsers(users);
+}
+
+function setRole(email, role) {
+  const users = readUsers();
+  const u = users.find((x) => x.email === email);
+  if (!u) throw new Error('No such account.');
+  const next = role === 'admin' ? 'admin' : 'user';
+  // Locking everyone out of the admin screen is not a recoverable mistake.
+  if (u.role === 'admin' && next !== 'admin' && countAdmins() <= 1) throw new Error('This is the last administrator.');
+  u.role = next;
+  writeUsers(users);
+}
+
+function deleteUser(email) {
+  const users = readUsers();
+  const u = users.find((x) => x.email === email);
+  if (!u) throw new Error('No such account.');
+  if (u.role === 'admin' && countAdmins() <= 1) throw new Error('This is the last administrator.');
+  writeUsers(users.filter((x) => x.email !== email));
+}
+
+const DEFAULT_ADMIN = { email: 'admin@prospecthub.com', password: 'adminPH' };
+
+/**
+ * Make sure an administrator exists at startup.
+ *
+ * This runs on every boot because a host may hand us an empty disk each deploy.
+ * On a database that already has accounts but no admin, the oldest one is promoted
+ * rather than a second account appearing from nowhere.
+ */
+function seedAdmin() {
+  const email = (process.env.ADMIN_EMAIL || DEFAULT_ADMIN.email).trim().toLowerCase();
+  const password = process.env.ADMIN_PASSWORD || DEFAULT_ADMIN.password;
+  const users = readUsers();
+
+  if (!users.length) {
+    createUser(email, password, { role: 'admin', allowShortPassword: true });
+    if (password === DEFAULT_ADMIN.password) {
+      console.warn(`Created ${email} with the default password. Set ADMIN_PASSWORD before putting this online.`);
+    } else {
+      console.log(`Created the administrator account ${email}.`);
+    }
+    return { created: true, email };
+  }
+
+  if (!users.some((u) => u.role === 'admin')) {
+    const oldest = users.slice().sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)))[0];
+    oldest.role = 'admin';
+    writeUsers(users);
+    console.log(`Promoted ${oldest.email} to administrator.`);
+    return { promoted: true, email: oldest.email };
+  }
+  return { created: false };
 }
 const DUMMY_HASH = bcrypt.hashSync('not-a-real-password', 12);
 async function checkLogin(email, password) {
@@ -112,4 +198,9 @@ function lockState(k) { const f = fails.get(k); if (f && f.until && f.until > Da
 function noteFail(k) { const f = fails.get(k) || { n: 0, until: 0 }; if (f.until && f.until <= Date.now()) { f.n = 0; f.until = 0; } f.n++; if (f.n >= 5) { f.until = Date.now() + 15 * 60 * 1000; f.n = 0; } fails.set(k, f); }
 function noteOk(k) { fails.delete(k); }
 
-module.exports = { createUser, checkLogin, hasUsers, sessionFrom, setSession, clearSession, lockState, noteFail, noteOk, validEmail, MIN_PASSWORD, setAiKey, getAiKey, hasAiKey };
+module.exports = {
+  createUser, checkLogin, hasUsers, sessionFrom, setSession, clearSession,
+  lockState, noteFail, noteOk, validEmail, MIN_PASSWORD,
+  setAiKey, getAiKey, hasAiKey,
+  listUsers, getUser, isAdmin, countAdmins, setPassword, setRole, deleteUser, seedAdmin, DEFAULT_ADMIN
+};

@@ -561,28 +561,35 @@ pres.addSection({ title: 'Plateforme' });
 /* ==================================================================== 17 */
 {
   const s = content('Plateforme', 'Les fonctionnalités principales',
-    'Six pages, de la vue d’ensemble à l’envoi et au suivi');
-  const w = (COL - 0.32 * 2) / 3;
+    'Sept écrans, de la vue d’ensemble à l’envoi, au suivi et à l’administration');
+  const w = (COL - 0.3 * 3) / 4;
   const feats = [
     ['Tableau de bord', 'KPI et 4 graphiques Chart.js, filtrables par secteur et statut. Chaque graphique a une vue tableau.'],
     ['Aujourd’hui', 'Les relances dues en premier, puis les meilleurs prospects du jour classés par score.'],
-    ['Entreprises', 'Les 283 fiches : recherche, filtres, tri et export CSV. Le jeu de données est livré avec l\u2019application.'],
-    ['Pipeline', 'Tableau kanban : chaque colonne défile seule, le plateau défile horizontalement. Glisser-déposer, filtre global.'],
+    ['Entreprises', 'Les 283 fiches : recherche, filtres, tri et export CSV. Le jeu de données est livré avec l’application.'],
+    ['Pipeline', 'Tableau kanban : chaque colonne défile seule, le plateau défile horizontalement.'],
     ['Panneau entreprise', 'Contact, score détaillé, rédaction IA, envoi, journal des contacts, audit du site.'],
-    ['Réglages', 'Identité, plafond d’envoi, clé IA, et les pondérations du score — avec l’effet de chaque curseur affiché en direct.']
+    ['Réglages', 'Identité, plafond d’envoi, clé IA, pondérations du score avec leur effet en direct.'],
+    ['Admin', 'Réservé aux administrateurs : comptes, droits, et correction des fiches entreprise.']
   ];
   feats.forEach(([t, b], i) => {
-    const x = M + (i % 3) * (w + 0.32);
-    const y = 1.95 + Math.floor(i / 3) * 2.3;
-    card(s, x, y, w, 2.05, { name: `feat-${i}` });
-    s.addText(t, { x: x + 0.26, y: y + 0.2, w: w - 0.52, h: 0.4, fontSize: 16, bold: true,
+    const x = M + (i % 4) * (w + 0.3);
+    const y = 1.95 + Math.floor(i / 4) * 2.45;
+    card(s, x, y, w, 2.25, { name: `feat-${i}` });
+    s.addText(t, { x: x + 0.22, y: y + 0.18, w: w - 0.44, h: 0.38, fontSize: 14.5, bold: true,
       color: ACCENT, isTextBox: true, margin: 0 });
-    s.addText(b, { x: x + 0.26, y: y + 0.68, w: w - 0.52, h: 1.2, fontSize: 12.5, color: MUTED,
+    s.addText(b, { x: x + 0.22, y: y + 0.6, w: w - 0.44, h: 1.5, fontSize: 11.5, color: MUTED,
       isTextBox: true, margin: 0, valign: 'top', lineSpacingMultiple: 1.15 });
   });
-  s.addText('Et une règle transversale : enregistrer un contact fait avancer le statut tout seul, pour qu’aucune relance ne se perde.',
-    { x: M, y: 6.5, w: COL - 1.1, h: 0.4, fontSize: 13.5, italic: true, color: ACCENT, isTextBox: true, margin: 0 });
-  s.addNotes("Six pages. Celle que j'utilise le plus est « Aujourd'hui » : elle répond à la seule question qui compte le matin, par où je commence. Les relances dues d'abord, puis les meilleurs prospects par score. Et le détail qui fait la différence à l'usage : quand j'enregistre un appel avec le résultat « intéressé », le statut passe à « répondu » et une date de relance est proposée automatiquement.");
+  // the eighth slot carries the rule that ties the screens together
+  const lastX = M + 3 * (w + 0.3), lastY = 1.95 + 2.45;
+  card(s, lastX, lastY, w, 2.25, { fill: SOFT, line: 'CFE2F7', name: 'feat-regle' });
+  s.addText('La règle transversale', { x: lastX + 0.22, y: lastY + 0.18, w: w - 0.44, h: 0.38,
+    fontSize: 14.5, bold: true, color: INK, isTextBox: true, margin: 0 });
+  s.addText('Enregistrer un contact fait avancer le statut tout seul et propose une date de relance, pour qu’aucun échange ne se perde.',
+    { x: lastX + 0.22, y: lastY + 0.6, w: w - 0.44, h: 1.5, fontSize: 11.5, color: MUTED,
+      isTextBox: true, margin: 0, valign: 'top', lineSpacingMultiple: 1.15 });
+  s.addNotes("Sept écrans. Celle que j'utilise le plus est « Aujourd'hui » : elle répond à la seule question qui compte le matin, par où je commence. Les relances dues d'abord, puis les meilleurs prospects par score. Et le détail qui fait la différence à l'usage : quand j'enregistre un appel avec le résultat « intéressé », le statut passe à « répondu » et une date de relance est proposée automatiquement.");
 }
 
 /* ==================================================================== 18 */

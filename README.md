@@ -37,8 +37,18 @@ npm start                   # http://127.0.0.1:3000
 
 Le jeu de données fait partie de l'application : les 283 entreprises de
 `app/data/companies.csv` sont chargées toutes seules au premier démarrage, il n'y a
-rien à importer. La page propose ensuite de **créer le compte** (uniquement depuis la
-même machine). Sinon :
+rien à importer.
+
+Un compte administrateur est créé à chaque démarrage si la base n'en a aucun :
+
+| | |
+|---|---|
+| Email | `admin@prospecthub.com`, ou `ADMIN_EMAIL` |
+| Mot de passe | `adminPH`, ou `ADMIN_PASSWORD` |
+
+**Définissez `ADMIN_PASSWORD` avant toute mise en ligne** : le mot de passe par défaut
+figure dans ce README, il est donc public. Les autres comptes se créent depuis la page
+Admin, ou en ligne de commande :
 
 ```bash
 npm run create-user -- vous@exemple.com "un mot de passe assez long"
@@ -108,6 +118,11 @@ En développement, ouvrez **http://127.0.0.1:5173** (Vite relaie `/api` vers le 
   en retard en tête de colonne.
 - **Panneau entreprise** — contact (Appel, WhatsApp, Email, Maps, Site), score
   détaillé, rédaction assistée par IA, envoi, journal des contacts, audit du site.
+- **Admin** — réservé aux administrateurs, l'onglet est masqué pour les autres.
+  Gestion des comptes (ajouter, changer un mot de passe, accorder ou retirer les
+  droits, supprimer) et des fiches entreprise (corriger le nom, la catégorie,
+  l'adresse, le téléphone, l'email, le site, la note, le nombre d'avis ; ajouter ou
+  supprimer une entreprise ; recharger le jeu de données livré).
 - **Réglages** — identité de l'expéditeur, plafond d'envoi, clé IA, pondérations du
   score (avec le nombre d'entreprises par palier qui se recalcule pendant qu'on
   déplace un curseur) et paliers par secteur, réglés en cinq boutons.

@@ -15,6 +15,7 @@ delete process.env.ANTHROPIC_API_KEY; delete process.env.GOOGLE_PLACES_API_KEY; 
 
 const listen = (srv) => new Promise((r) => srv.listen(0, '127.0.0.1', () => r(srv.address().port)));
 let site, siteUrl, mockAi, app, base, cookie = '';
+const ADMIN = { email: 'admin@prospecthub.com', password: 'adminPH' };
 
 async function call(method, url, body, extra = {}) {
   const r = await fetch(base + url, { method, headers: { 'content-type': 'application/json', 'x-requested-with': 'prospect-hub', cookie, ...extra }, body: body === undefined ? undefined : JSON.stringify(body), redirect: 'manual' });
@@ -63,18 +64,18 @@ test.before(async () => {
 });
 test.after(() => { [site, mockAi, global.__srv].forEach((s) => { if (s) { s.closeAllConnections(); s.close(); } }); });
 
-test('auth: gate, setup, login, bad password, csrf header', async () => {
+test('auth: gate, seeded admin, login, bad password, csrf header', async () => {
   assert.strictEqual((await call('GET', '/api/leads')).status, 401);
-  assert.strictEqual((await call('GET', '/api/session')).json.needsSetup, true);
-  assert.strictEqual((await call('POST', '/api/setup', { email: 'a@b.co', password: 'short' })).status, 400);
-  assert.strictEqual((await call('POST', '/api/setup', { email: 'me@example.com', password: 'correct horse battery' })).status, 200);
+  // an administrator is seeded at boot, so there is no first-run setup to do
+  assert.strictEqual((await call('GET', '/api/session')).json.needsSetup, false);
   assert.strictEqual((await call('POST', '/api/setup', { email: 'x@example.com', password: 'another long password' })).status, 403);
-  assert.strictEqual((await call('GET', '/api/session')).json.user, 'me@example.com');
+
+  assert.strictEqual((await call('POST', '/api/login', { email: ADMIN.email, password: 'wrong password!!' })).status, 401);
+  assert.strictEqual((await call('POST', '/api/login', ADMIN)).status, 200);
+  assert.strictEqual((await call('GET', '/api/session')).json.user, ADMIN.email);
+
   const noHeader = await fetch(base + '/api/logout', { method: 'POST', headers: { cookie } });
-  assert.strictEqual(noHeader.status, 403);
-  await call('POST', '/api/logout', {}); cookie = '';
-  assert.strictEqual((await call('POST', '/api/login', { email: 'me@example.com', password: 'wrong password!!' })).status, 401);
-  assert.strictEqual((await call('POST', '/api/login', { email: 'me@example.com', password: 'correct horse battery' })).status, 200);
+  assert.strictEqual(noHeader.status, 403, 'a state-changing call needs the custom header');
   assert.strictEqual((await call('GET', '/')).status, 200);
 });
 
@@ -209,7 +210,7 @@ test('static: the built client is served on every client route', async () => {
     assert.match(r.json, /<div id="root">/, u);
   }
   assert.strictEqual((await call('GET', '/api/leads')).status, 401);
-  await call('POST', '/api/login', { email: 'me@example.com', password: 'correct horse battery' });
+  await call('POST', '/api/login', ADMIN);
 });
 
 test('contact log moves the lead along and sets a follow-up date', async () => {
@@ -231,6 +232,58 @@ test('contact log moves the lead along and sets a follow-up date', async () => {
 
   assert.strictEqual((await call('DELETE', '/api/leads/P1/log/9')).status, 404);
   assert.strictEqual((await call('DELETE', '/api/leads/P1/log/0')).json.log.length, 0);
+});
+
+test('admin: the seeded administrator, accounts and records', async () => {
+  // app.js seeds an administrator on every boot, so one always exists
+  const me = (await call('GET', '/api/config')).json;
+  assert.strictEqual(me.isAdmin, true, 'the first account is the administrator');
+
+  const users = (await call('GET', '/api/admin/users')).json;
+  assert.ok(users.some((u) => u.role === 'admin'));
+  assert.ok(!JSON.stringify(users).includes('$2'), 'no password hash is ever sent out');
+
+  // create a plain user, who must not reach the admin routes
+  assert.strictEqual((await call('POST', '/api/admin/users', { email: 'bad', password: 'x' })).status, 400);
+  const created = await call('POST', '/api/admin/users', { email: 'staff@example.com', password: 'a-long-enough-password' });
+  assert.strictEqual(created.status, 201);
+  assert.strictEqual(created.json.find((u) => u.email === 'staff@example.com').role, 'user');
+
+  const adminCookie = cookie;
+  await call('POST', '/api/logout', {}); cookie = '';
+  await call('POST', '/api/login', { email: 'staff@example.com', password: 'a-long-enough-password' });
+  assert.strictEqual((await call('GET', '/api/config')).json.isAdmin, false);
+  assert.strictEqual((await call('GET', '/api/admin/users')).status, 403, 'a plain user is refused');
+  assert.strictEqual((await call('DELETE', '/api/admin/leads/P1')).status, 403);
+  cookie = adminCookie;
+
+  // an administrator cannot lock themselves out
+  assert.strictEqual((await call('PATCH', `/api/admin/users/${me.user}`, { role: 'user' })).status, 400);
+  assert.strictEqual((await call('DELETE', `/api/admin/users/${me.user}`)).status, 400);
+
+  assert.strictEqual((await call('DELETE', '/api/admin/users/staff@example.com')).status, 200);
+});
+
+test('admin: correcting, adding and deleting a company', async () => {
+  const fixed = await call('PATCH', '/api/admin/leads/P1', { nom: 'Acme Digital SARL', categorie: 'Informatique', note: 4.8 });
+  assert.strictEqual(fixed.status, 200);
+  assert.strictEqual(fixed.json.nom, 'Acme Digital SARL');
+  assert.strictEqual(fixed.json.note, 4.8);
+  assert.strictEqual((await call('PATCH', '/api/admin/leads/P1', { email: 'not-an-email' })).status, 400);
+  assert.strictEqual((await call('PATCH', '/api/admin/leads/nope', { nom: 'x' })).status, 404);
+
+  const added = await call('POST', '/api/admin/leads', { nom: 'Nouvelle Entreprise', categorie: 'Services' });
+  assert.strictEqual(added.status, 201);
+  assert.ok(added.json.id, 'an identifier is generated');
+  assert.ok((await call('GET', '/api/leads')).json.some((l) => l.nom === 'Nouvelle Entreprise'));
+
+  assert.strictEqual((await call('DELETE', `/api/admin/leads/${added.json.id}`)).status, 200);
+  assert.ok(!(await call('GET', '/api/leads')).json.some((l) => l.nom === 'Nouvelle Entreprise'));
+
+  // reloading the dataset is guarded and puts the edited record back
+  assert.strictEqual((await call('POST', '/api/admin/reset', {})).status, 400);
+  assert.strictEqual((await call('POST', '/api/admin/reset', { confirm: 'reset' })).status, 200);
+  assert.strictEqual((await call('GET', '/api/leads')).json.find((l) => l.id === 'P1').nom, 'Acme Digital');
 });
 
 test('settings keep the scoring weights and tiers', async () => {

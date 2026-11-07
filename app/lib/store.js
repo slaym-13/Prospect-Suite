@@ -123,6 +123,55 @@ function importCsvText(text, { merge = true } = {}) {
 }
 function importCsvFile(file, opts) { return importCsvText(fs.readFileSync(file, 'utf8'), opts); }
 
+/* ---------- administration ---------- */
+
+/** The company fields an administrator may correct. Everything else is derived. */
+const EDITABLE = ['nom', 'adresse', 'telephone', 'site_web', 'email', 'categorie', 'google_maps', 'query'];
+const NUMERIC = ['note', 'nombre_avis', 'latitude', 'longitude'];
+
+function addLead(fields) {
+  const d = get();
+  const lead = newLead(fields);
+  if (!lead.nom) throw new Error('A company needs a name.');
+  if (!lead.id) lead.id = 'man-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  if (d.leads[lead.id]) throw new Error('A company with that identifier already exists.');
+  d.leads[lead.id] = lead;
+  save();
+  return lead;
+}
+
+function updateLead(id, fields) {
+  const lead = get().leads[id];
+  if (!lead) throw new Error('No such company.');
+  for (const k of EDITABLE) {
+    if (fields[k] === undefined) continue;
+    lead[k] = String(fields[k]).trim();
+  }
+  if (lead.email) lead.email = lead.email.toLowerCase();
+  for (const k of NUMERIC) {
+    if (fields[k] === undefined) continue;
+    lead[k] = fields[k] === '' || fields[k] === null ? null : num(fields[k]);
+  }
+  save();
+  return lead;
+}
+
+function removeLead(id) {
+  const d = get();
+  if (!d.leads[id]) throw new Error('No such company.');
+  delete d.leads[id];
+  save();
+}
+
+/** Throw the working data away and load the shipped dataset again. */
+function resetLeads(seedFile) {
+  const d = get();
+  d.leads = {};
+  const result = importCsvFile(seedFile);
+  saveNow();
+  return result;
+}
+
 const guard = (v) => { v = v == null ? '' : String(v); return /^[=+\-@\t\r]/.test(v) ? "'" + v : v; };
 function exportCsv() {
   const cols = ['place_id', 'nom', 'adresse', 'telephone', 'site_web', 'email', 'google_maps', 'categorie', 'note', 'nombre_avis', 'latitude', 'longitude', 'query', 'status', 'next_step', 'last_contacted'];
@@ -133,4 +182,8 @@ function exportCsv() {
   return '﻿' + stringify([cols, ...rows]);
 }
 
-module.exports = { load, get, save, saveNow, importCsvText, importCsvFile, exportCsv, DEFAULT_SETTINGS, STATUSES, DATA_DIR, mergeSettings };
+module.exports = {
+  load, get, save, saveNow, importCsvText, importCsvFile, exportCsv,
+  addLead, updateLead, removeLead, resetLeads,
+  DEFAULT_SETTINGS, STATUSES, DATA_DIR, mergeSettings
+};

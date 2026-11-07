@@ -20,8 +20,15 @@ npm run build           # builds the React client into dist/
 npm start               # http://127.0.0.1:3000
 ```
 
-The first visit shows **Create your account** (only from the same computer).
-Or create one from the terminal:
+An administrator account is created on every start if the database has none:
+
+| | |
+|---|---|
+| Email | `admin@prospecthub.com`, or `ADMIN_EMAIL` |
+| Password | `adminPH`, or `ADMIN_PASSWORD` |
+
+**Set `ADMIN_PASSWORD` before putting this online** — the default is in this README,
+so it is public. Everyone else is added from the Admin page, or from the terminal:
 
 ```bash
 npm run create-user -- you@example.com "a long password"
@@ -90,6 +97,7 @@ header toggle overrides it.
 | **Pipeline** | A kanban board. Each column scrolls on its own so the board stays one screen tall; the board scrolls sideways for the last columns. Drag a card or use its menu, filter every column at once, overdue follow-ups first. |
 | **Outbox** | Every message the app tried to send. |
 | **Settings** | Your Gemini API key, who you are, sending limits, the scoring weights (with a live count of how many companies each change promotes) and the category tiers. |
+| **Admin** | Administrators only. Accounts (add, change password, grant or remove rights, delete) and the company records themselves (correct, add, delete, reload the dataset). |
 
 ### The company drawer
 

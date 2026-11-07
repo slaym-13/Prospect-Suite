@@ -567,9 +567,9 @@ pres.addSection({ title: 'Plateforme' });
     ['Tableau de bord', 'KPI et 4 graphiques Chart.js, filtrables par secteur et statut. Chaque graphique a une vue tableau.'],
     ['Aujourd’hui', 'Les relances dues en premier, puis les meilleurs prospects du jour classés par score.'],
     ['Entreprises', 'Les 283 fiches : recherche, filtres, tri et export CSV. Le jeu de données est livré avec l\u2019application.'],
-    ['Pipeline', 'Un tableau par statut, glisser-déposer entre les colonnes.'],
+    ['Pipeline', 'Tableau kanban : chaque colonne défile seule, le plateau défile horizontalement. Glisser-déposer, filtre global.'],
     ['Panneau entreprise', 'Contact, score détaillé, rédaction IA, envoi, journal des contacts, audit du site.'],
-    ['Réglages', 'Identité, plafond d’envoi, clé IA, et les pondérations du score.']
+    ['Réglages', 'Identité, plafond d’envoi, clé IA, et les pondérations du score — avec l’effet de chaque curseur affiché en direct.']
   ];
   feats.forEach(([t, b], i) => {
     const x = M + (i % 3) * (w + 0.32);

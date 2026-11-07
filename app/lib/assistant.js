@@ -37,10 +37,17 @@ website, category, rating and review count.
   Click any row to open that company.
 - **Pipeline** - a board with columns New, Contacted, Replied, Meeting, Won, Lost.
   Drag a card to another column, or use the dropdown on the card (which works on a
-  phone). Each column shows its 40 highest-scoring companies.
+  phone). Each column scrolls on its own, so the board stays one screen tall, and the
+  whole board scrolls sideways to reach the last columns. A card shows the company,
+  its score, its follow-up date and whether it has an email. Overdue follow-ups come
+  first in each column, then the best scores. The search box at the top filters every
+  column at once, and a column loads 25 cards at a time.
 - **Outbox** - every message the app tried to send, newest first, with the result.
 - **Settings** - who you are, sending limits, the AI key, the scoring weights and the
-  category tiers.
+  category tiers. The Fit score panel shows, live as you drag a slider, how many
+  companies would land in each band. The Category tiers panel lists every category
+  with how many companies it holds, biggest first, and sets the tier with five
+  buttons (A, B, C, D, excluded) rather than a dropdown.
 
 ## The company panel (click any company)
 

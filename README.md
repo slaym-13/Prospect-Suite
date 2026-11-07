@@ -102,11 +102,15 @@ En développement, ouvrez **http://127.0.0.1:5173** (Vite relaie `/api` vers le 
 - **Aujourd'hui** — les relances dues, puis les meilleurs prospects du jour classés
   par score d'opportunité.
 - **Entreprises** — les 283 fiches : recherche, filtres, tri et export CSV.
-- **Pipeline** — tableau par statut, avec glisser-déposer.
+- **Pipeline** — tableau kanban. Chaque colonne défile indépendamment, donc le
+  tableau tient sur un écran ; le plateau défile horizontalement pour atteindre les
+  dernières colonnes. Glisser-déposer ou menu sur la carte, filtre global, relances
+  en retard en tête de colonne.
 - **Panneau entreprise** — contact (Appel, WhatsApp, Email, Maps, Site), score
   détaillé, rédaction assistée par IA, envoi, journal des contacts, audit du site.
 - **Réglages** — identité de l'expéditeur, plafond d'envoi, clé IA, pondérations du
-  score.
+  score (avec le nombre d'entreprises par palier qui se recalcule pendant qu'on
+  déplace un curseur) et paliers par secteur, réglés en cinq boutons.
 - **Assistant « Ask »** — répond aux questions sur l'application à partir d'un guide
   interne, d'un instantané des données de l'utilisateur et de l'historique de la
   conversation.

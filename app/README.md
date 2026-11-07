@@ -87,9 +87,9 @@ header toggle overrides it.
 | **Dashboard** | Coverage funnel, email coverage by category, rating bands, pipeline. Every chart has a Table view. |
 | **Today** | Follow-ups that are due, companies in conversation with no next step, then the best new leads by fit score. |
 | **Companies** | The full list: search, filter, sort, export CSV. Click a row for the company drawer. |
-| **Pipeline** | A board by status. Drag a card, or change its stage on the card (which also works on a phone). |
+| **Pipeline** | A kanban board. Each column scrolls on its own so the board stays one screen tall; the board scrolls sideways for the last columns. Drag a card or use its menu, filter every column at once, overdue follow-ups first. |
 | **Outbox** | Every message the app tried to send. |
-| **Settings** | Your Gemini API key, who you are, sending limits, the scoring weights and the category tiers. |
+| **Settings** | Your Gemini API key, who you are, sending limits, the scoring weights (with a live count of how many companies each change promotes) and the category tiers. |
 
 ### The company drawer
 

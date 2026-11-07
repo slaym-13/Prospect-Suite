@@ -39,19 +39,28 @@ Le jeu de données fait partie de l'application : les 283 entreprises de
 `app/data/companies.csv` sont chargées toutes seules au premier démarrage, il n'y a
 rien à importer.
 
-Un compte administrateur est créé à chaque démarrage si la base n'en a aucun :
+### Le compte administrateur
 
-| | |
-|---|---|
-| Email | `admin@prospecthub.com`, ou `ADMIN_EMAIL` |
-| Mot de passe | `adminPH`, ou `ADMIN_PASSWORD` |
-
-**Définissez `ADMIN_PASSWORD` avant toute mise en ligne** : le mot de passe par défaut
-figure dans ce README, il est donc public. Les autres comptes se créent depuis la page
-Admin, ou en ligne de commande :
+Au démarrage, si la base ne contient aucun compte, l'application en crée un à partir
+de `ADMIN_EMAIL` et `ADMIN_PASSWORD` :
 
 ```bash
-npm run create-user -- vous@exemple.com "un mot de passe assez long"
+ADMIN_EMAIL=vous@exemple.com ADMIN_PASSWORD='un mot de passe long' npm start
+```
+
+Sans ces variables, un compte de développement est créé avec des identifiants par
+défaut, et le serveur l'annonce dans la console au premier démarrage. Ces identifiants
+sont destinés au poste local uniquement.
+
+> **En production, `ADMIN_PASSWORD` est obligatoire.** Les identifiants par défaut sont
+> lisibles dans le code source : toute instance accessible publiquement qui les
+> conserve est ouverte à n'importe qui. Le serveur affiche un avertissement tant
+> qu'ils sont en usage.
+
+Les comptes suivants se créent depuis la page **Admin**, ou en ligne de commande :
+
+```bash
+npm run create-user -- collegue@exemple.com "un mot de passe assez long"
 ```
 
 ### La chaîne d'analyse

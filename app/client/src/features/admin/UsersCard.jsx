@@ -76,6 +76,11 @@ export function UsersCard() {
                 <td className="px-3 py-2">
                   <span className="break-all">{u.email}</span>
                   {u.email === config.user && <span className="ml-1.5 text-xs text-muted">(you)</span>}
+                  {u.defaultPassword && (
+                    <Pill tone="bad" className="ml-1.5" title="Change this before the app is reachable publicly">
+                      default password
+                    </Pill>
+                  )}
                 </td>
                 <td className="px-3 py-2">
                   <Select

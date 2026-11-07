@@ -20,18 +20,27 @@ npm run build           # builds the React client into dist/
 npm start               # http://127.0.0.1:3000
 ```
 
-An administrator account is created on every start if the database has none:
+### The administrator account
 
-| | |
-|---|---|
-| Email | `admin@prospecthub.com`, or `ADMIN_EMAIL` |
-| Password | `adminPH`, or `ADMIN_PASSWORD` |
-
-**Set `ADMIN_PASSWORD` before putting this online** — the default is in this README,
-so it is public. Everyone else is added from the Admin page, or from the terminal:
+On start, if the database holds no account, one is created from `ADMIN_EMAIL` and
+`ADMIN_PASSWORD`:
 
 ```bash
-npm run create-user -- you@example.com "a long password"
+ADMIN_EMAIL=you@example.com ADMIN_PASSWORD='a long password' npm start
+```
+
+Without those variables a development account is created instead, and the server
+prints its credentials to the console on first start. They are meant for a local
+machine only.
+
+> **`ADMIN_PASSWORD` is required in production.** The development credentials are
+> readable in the source, so any publicly reachable instance that keeps them is open
+> to anyone. The server warns on every start while they are in use.
+
+Further accounts are added from the **Admin** page, or from the terminal:
+
+```bash
+npm run create-user -- colleague@example.com "a long password"
 ```
 
 The dataset ships with the app: on first start the 283 companies in

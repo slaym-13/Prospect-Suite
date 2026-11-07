@@ -86,7 +86,8 @@ function listUsers() {
     email: u.email,
     role: u.role === 'admin' ? 'admin' : 'user',
     createdAt: u.createdAt || null,
-    hasAiKey: !!u.aiKey
+    hasAiKey: !!u.aiKey,
+    defaultPassword: !!u.defaultPassword
   }));
 }
 function getUser(email) { return readUsers().find((u) => u.email === String(email || '').trim().toLowerCase()) || null; }
@@ -101,6 +102,7 @@ function setPassword(email, password) {
   const u = users.find((x) => x.email === email);
   if (!u) throw new Error('No such account.');
   u.hash = bcrypt.hashSync(password, 12);
+  delete u.defaultPassword;   // whatever it is now, it is no longer the shipped one
   writeUsers(users);
 }
 
@@ -140,11 +142,31 @@ function seedAdmin() {
   if (!users.length) {
     createUser(email, password, { role: 'admin', allowShortPassword: true });
     if (password === DEFAULT_ADMIN.password) {
-      console.warn(`Created ${email} with the default password. Set ADMIN_PASSWORD before putting this online.`);
+      // Flag it so later boots can keep warning without re-hashing to find out.
+      const list = readUsers();
+      list.find((u) => u.email === email).defaultPassword = true;
+      writeUsers(list);
+      console.warn(
+        `
+  Development administrator created` +
+        `
+    email:    ${email}` +
+        `
+    password: ${password}` +
+        `
+  Set ADMIN_EMAIL and ADMIN_PASSWORD before deploying this.
+`
+      );
     } else {
       console.log(`Created the administrator account ${email}.`);
     }
     return { created: true, email };
+  }
+
+  // Still on the shipped password: say so on every start, not just the first.
+  const stale = users.find((u) => u.defaultPassword);
+  if (stale) {
+    console.warn(`  ${stale.email} still uses the development password. Set ADMIN_PASSWORD, or change it on the Admin page.`);
   }
 
   if (!users.some((u) => u.role === 'admin')) {

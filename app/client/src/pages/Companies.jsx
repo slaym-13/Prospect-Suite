@@ -1,5 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
-import { api } from '../lib/api';
+import { useMemo, useState } from 'react';
 import { useApp } from '../store/AppContext';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
@@ -18,14 +17,13 @@ const EMAIL_FILTERS = [
 ];
 
 export default function Companies() {
-  const { leads, config, loading, error, loadLeads, toast } = useApp();
+  const { leads, config, loading, error } = useApp();
   const [query, setQuery] = useState('');
   const [emailFilter, setEmailFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [sort, setSort] = useState({ key: 'score', dir: -1 });
   const [limit, setLimit] = useState(100);
   const [openId, setOpenId] = useState(null);
-  const fileRef = useRef(null);
 
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -49,16 +47,6 @@ export default function Companies() {
 
   function toggleSort(key) {
     setSort((s) => ({ key, dir: s.key === key ? -s.dir : key === 'nom' ? 1 : -1 }));
-  }
-
-  async function importCsv(file) {
-    try {
-      const result = await api.importCsv(await file.text());
-      toast(`Imported: ${result.added} new, ${result.updated} updated`);
-      loadLeads();
-    } catch (e) {
-      toast(e.message, 'bad');
-    }
   }
 
   if (loading) return <Spinner />;
@@ -132,14 +120,6 @@ export default function Companies() {
           ))}
         </Select>
         <span className="flex-1" />
-        <Button onClick={() => fileRef.current.click()}>Import CSV</Button>
-        <input
-          ref={fileRef}
-          type="file"
-          accept=".csv,text/csv"
-          hidden
-          onChange={(e) => e.target.files[0] && importCsv(e.target.files[0])}
-        />
         <Button variant="primary" href="/api/export.csv">
           Download CSV
         </Button>

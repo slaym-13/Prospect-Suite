@@ -566,7 +566,7 @@ pres.addSection({ title: 'Plateforme' });
   const feats = [
     ['Tableau de bord', 'KPI et 4 graphiques Chart.js, filtrables par secteur et statut. Chaque graphique a une vue tableau.'],
     ['Aujourd’hui', 'Les relances dues en premier, puis les meilleurs prospects du jour classés par score.'],
-    ['Entreprises', 'Les 282 fiches : recherche, filtres, tri, import et export CSV.'],
+    ['Entreprises', 'Les 283 fiches : recherche, filtres, tri et export CSV. Le jeu de données est livré avec l\u2019application.'],
     ['Pipeline', 'Un tableau par statut, glisser-déposer entre les colonnes.'],
     ['Panneau entreprise', 'Contact, score détaillé, rédaction IA, envoi, journal des contacts, audit du site.'],
     ['Réglages', 'Identité, plafond d’envoi, clé IA, et les pondérations du score.']

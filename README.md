@@ -35,8 +35,10 @@ npm run build               # construit le client React dans app/dist
 npm start                   # http://127.0.0.1:3000
 ```
 
-Au premier démarrage, `app/data/companies.csv` est importé automatiquement et la
-page propose de **créer le compte** (uniquement depuis la même machine). Sinon :
+Le jeu de données fait partie de l'application : les 283 entreprises de
+`app/data/companies.csv` sont chargées toutes seules au premier démarrage, il n'y a
+rien à importer. La page propose ensuite de **créer le compte** (uniquement depuis la
+même machine). Sinon :
 
 ```bash
 npm run create-user -- vous@exemple.com "un mot de passe assez long"
@@ -99,7 +101,7 @@ En développement, ouvrez **http://127.0.0.1:5173** (Vite relaie `/api` vers le 
   doublé d'une vue tableau.
 - **Aujourd'hui** — les relances dues, puis les meilleurs prospects du jour classés
   par score d'opportunité.
-- **Entreprises** — les 283 fiches : recherche, filtres, tri, import/export CSV.
+- **Entreprises** — les 283 fiches : recherche, filtres, tri et export CSV.
 - **Pipeline** — tableau par statut, avec glisser-déposer.
 - **Panneau entreprise** — contact (Appel, WhatsApp, Email, Maps, Site), score
   détaillé, rédaction assistée par IA, envoi, journal des contacts, audit du site.
@@ -167,6 +169,12 @@ par IA peut être faux.**
 
 `app/data/companies.csv` contient 283 entreprises de Marrakech collectées via
 l'API Google Places (14 requêtes croisant un métier et la ville, dédupliquées par
-`place_id`). Ce sont des informations professionnelles publiques. Les données
-d'exécution (`db.json`, `users.json`, `.secret`) ne sont volontairement pas
-versionnées.
+`place_id`). Ce sont des informations professionnelles publiques.
+
+Ce fichier est **livré avec le code** et chargé au démarrage si la base est vide :
+l'application n'a donc pas d'écran d'import, et elle affiche ses données même sur un
+hébergement dont le disque est réinitialisé à chaque déploiement. Pour modifier le
+jeu de données, on édite le CSV et on redéploie.
+
+Les données d'exécution (`db.json`, `users.json`, `.secret`) ne sont volontairement
+pas versionnées.

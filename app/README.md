@@ -27,7 +27,9 @@ Or create one from the terminal:
 npm run create-user -- you@example.com "a long password"
 ```
 
-On first start, `data/companies.csv` is imported. Your data then lives in `data/db.json`.
+The dataset ships with the app: on first start the 283 companies in
+`data/companies.csv` load by themselves, so there is nothing to import. Your working
+data then lives in `data/db.json`.
 
 ## Develop
 
@@ -84,7 +86,7 @@ header toggle overrides it.
 |---|---|
 | **Dashboard** | Coverage funnel, email coverage by category, rating bands, pipeline. Every chart has a Table view. |
 | **Today** | Follow-ups that are due, companies in conversation with no next step, then the best new leads by fit score. |
-| **Companies** | The full list: search, filter, sort, import and export CSV. Click a row for the company drawer. |
+| **Companies** | The full list: search, filter, sort, export CSV. Click a row for the company drawer. |
 | **Pipeline** | A board by status. Drag a card, or change its stage on the card (which also works on a phone). |
 | **Outbox** | Every message the app tried to send. |
 | **Settings** | Your Gemini API key, who you are, sending limits, the scoring weights and the category tiers. |
@@ -183,7 +185,8 @@ behind HTTPS and set `TRUST_PROXY`.
 
 ## Tests
 
-`npm test` runs the end-to-end suite against local mock servers: auth, CSV import,
-the per-user AI key (including that it is never returned and never stored in the
-clear), AI drafts, the assistant's memory, sending rules, the contact log, settings,
-CSV export, and that the built client is served on every route. No internet needed.
+`npm test` runs the end-to-end suite against local mock servers: auth, seeding the
+dataset, the per-user AI key (including that it is never returned and never stored in
+the clear), AI drafts, the assistant's memory, sending rules, the contact log,
+settings, CSV export, and that the built client is served on every route. No internet
+needed.

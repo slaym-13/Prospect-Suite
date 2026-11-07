@@ -33,7 +33,7 @@ website, category, rating and review count.
   (change that number in Settings). "Skip 7 days" hides a company for a week.
 - **Companies** - the full table. Search by name, address or category; filter by email
   state (has email, none, not searched, no website) and by status; sort by any column.
-  "Import CSV" adds or updates companies; "Download CSV" exports everything.
+  "Download CSV" exports everything, scores and statuses included.
   Click any row to open that company.
 - **Pipeline** - a board with columns New, Contacted, Replied, Meeting, Won, Lost.
   Drag a card to another column, or use the dropdown on the card (which works on a
@@ -79,12 +79,12 @@ and every list re-ranks when you change them.
 
 ## Email addresses
 
-Addresses come with the company data, imported from data/companies.csv. About half the
-283 companies have one. A company's address is shown in its Details panel and in the
-Email column on the Companies page; the Email button in the contact row opens your mail
-app with a new message to it. The "Has email" / "No email" filter on Companies narrows
-the list. The app no longer searches the web for addresses: to add or correct one,
-update the CSV and use "Import CSV" on the Companies page.
+Addresses ship with the company data. About half the 283 companies have one. A
+company's address is shown in its Details panel and in the Email column on the
+Companies page; the Email button in the contact row opens your mail app with a new
+message to it. The "Has email" / "No email" filter on Companies narrows the list. The
+app does not search the web for addresses, and there is no import screen: the dataset
+is part of the application and loads itself on first start.
 
 ## Sending rules
 

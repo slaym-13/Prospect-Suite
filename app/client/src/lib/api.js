@@ -56,6 +56,5 @@ export const api = {
   outbox: () => get('/api/outbox'),
   currentJob: () => get('/api/jobs/current'),
   startJob: (type, scope) => request('POST', '/api/jobs/start', { type, scope }),
-  cancelJob: () => request('POST', '/api/jobs/cancel', {}),
-  importCsv: (text) => request('POST', '/api/import', text, { raw: true })
+  cancelJob: () => request('POST', '/api/jobs/cancel', {})
 };

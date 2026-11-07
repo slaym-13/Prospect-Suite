@@ -229,9 +229,6 @@ function createApi(opts = {}) {
 
   /* ----- data in and out ----- */
   r.get('/export.csv', (req, res) => { res.setHeader('Content-Type', 'text/csv; charset=utf-8'); res.setHeader('Content-Disposition', 'attachment; filename="entreprises_avec_email.csv"'); res.send(store.exportCsv()); });
-  r.post('/import', express.text({ type: '*/*', limit: '5mb' }), (req, res) => {
-    try { res.json(store.importCsvText(String(req.body || ''), { merge: true })); } catch (e) { res.status(400).json({ error: 'Could not read that CSV: ' + e.message }); }
-  });
   return r;
 }
 module.exports = { createApi, lightLead };

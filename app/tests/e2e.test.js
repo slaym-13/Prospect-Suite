@@ -185,7 +185,9 @@ test('export csv carries the email column', async () => {
   assert.ok(!/email_confidence/.test(csv), 'the crawler columns are gone');
 });
 
-test('the email finder is gone', async () => {
+test('the removed features are really gone', async () => {
+  // the dataset ships with the app; there is no import screen and no import route
+  assert.strictEqual((await call('POST', '/api/import', 'place_id,nom', { 'content-type': 'text/csv' })).status, 404);
   assert.strictEqual((await call('POST', '/api/leads/P1/find-email', {})).status, 404);
   assert.strictEqual((await call('POST', '/api/jobs/start', { type: 'find-emails' })).status, 400);
   assert.ok(!('hunter' in (await call('GET', '/api/config')).json));

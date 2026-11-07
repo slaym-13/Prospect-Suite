@@ -12,7 +12,7 @@ const pptxgen = require('pptxgenjs');
 
 const FIG = (n) => path.join('analysis', 'outputs', 'figures', `${n}.png`);
 const BG = (n) => path.join('presentation', 'assets', `bg_${n}.png`);
-const OUT = path.join('presentation', 'GROUPE_NOM_PRENOM_VF.pptx');
+const OUT = path.join('presentation', 'IOADA202_HARMACH_SOULAIMANE_VF.pptx');
 
 /* ------------------------------------------------------------------ theme */
 // The palette is the application's own (client/src/theme.css), so the deck and the
@@ -41,7 +41,7 @@ const RIGHT = M + C2 + GAP;           // x of the right column
 const pres = new pptxgen();
 pres.layout = 'LAYOUT_WIDE';
 pres.theme = { headFontFace: THEME.headFontFace, bodyFontFace: THEME.bodyFontFace };
-pres.author = 'Prospect Hub';
+pres.author = 'HARMACH Soulaimane';
 pres.title = 'Prospect Hub — plateforme de prospection et de candidature';
 
 /* ---------------------------------------------------------------- layouts */
@@ -167,8 +167,10 @@ pres.addSection({ title: 'Ouverture' });
   chip(s, M, 1.78, 'PROJET DATA · VERSION FINALE', 'info', 3.3);
   s.addText('283 entreprises collectées  ·  Python · React · Express · Gemini',
     { x: M, y: 5.25, w: 9, h: 0.4, fontSize: 14, color: MUTED, isTextBox: true, margin: 0 });
-  s.addText('GROUPE — NOM Prénom', { x: M, y: 5.78, w: 9, h: 0.4, fontSize: 15,
+  s.addText('HARMACH Soulaimane', { x: M, y: 5.74, w: 9, h: 0.38, fontSize: 16,
     bold: true, color: INK, isTextBox: true, margin: 0 });
+  s.addText('Groupe IOADA202', { x: M, y: 6.1, w: 9, h: 0.34, fontSize: 13.5,
+    color: MUTED, isTextBox: true, margin: 0 });
   s.addNotes("Bonjour. Je vous présente Prospect Hub, une plateforme qui part d'une liste brute de 283 entreprises de Marrakech collectées sur Google Places, et qui va jusqu'à l'envoi d'une candidature spontanée et au suivi de la réponse. Je vais dérouler la chaîne complète : collecte, exploration, nettoyage en Python, analyse, puis la plateforme elle-même.");
 }
 

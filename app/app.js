@@ -46,10 +46,13 @@ function createApp(opts = {}) {
     res.status(500).send('Server error');
   });
 
-  // first run: load the CSV that ships in data/
-  const seed = path.join(store.DATA_DIR, 'companies.csv');
-  if (!Object.keys(store.get().leads).length && fs.existsSync(seed)) {
-    const r = store.importCsvFile(seed); store.saveNow(); console.log(`Imported ${r.added} companies from data/companies.csv`);
+  // First run: import the companies that ship with the app. On a host where the only
+  // writable place is a scratch directory, DATA_DIR points there and starts empty, so
+  // fall back to the copy that travels with the source.
+  const seed = [path.join(store.DATA_DIR, 'companies.csv'), path.join(__dirname, 'data', 'companies.csv')]
+    .find((file) => fs.existsSync(file));
+  if (seed && !Object.keys(store.get().leads).length) {
+    const r = store.importCsvFile(seed); store.saveNow(); console.log(`Imported ${r.added} companies from ${seed}`);
   }
   return app;
 }

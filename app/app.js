@@ -43,7 +43,14 @@ function createApp(opts = {}) {
   });
   app.use((req, res) => res.status(404).send('Not found. Run "npm run build" if the client has not been built yet.'));
   app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
-    if (req.path.startsWith('/api')) return res.status(err.status || 500).json({ error: err.status === 400 ? 'Bad request.' : 'Something went wrong on the server.' });
+    // A reference the person can read off the screen and find in the log.
+    const ref = Math.random().toString(36).slice(2, 8);
+    console.error(`[${ref}] ${req.method} ${req.originalUrl} failed:`, err && err.stack ? err.stack : err);
+    if (req.path.startsWith('/api')) {
+      return res.status(err.status || 500).json({
+        error: err.status === 400 ? 'Bad request.' : `Something went wrong on the server (ref ${ref}). The console has the details.`
+      });
+    }
     res.status(500).send('Server error');
   });
 

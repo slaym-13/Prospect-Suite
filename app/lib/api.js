@@ -95,7 +95,14 @@ function createApi(opts = {}) {
     const value = String((req.body && req.body.key) || '').trim();
     if (value.length < 20 || value.length > 200 || /\s/.test(value)) return res.status(400).json({ error: 'That does not look like an API key.' });
     try { await ai.checkKey(value, fetchFn); } catch (e) { return res.status(400).json({ error: e.message }); }
-    auth.setAiKey(req.user, value);
+    try {
+      auth.setAiKey(req.user, value);
+    } catch (e) {
+      // Google accepted the key; the failure is ours (unwritable data directory,
+      // missing account). Say which, instead of a blank "something went wrong".
+      console.error('Could not store the AI key for', req.user, '-', e.message);
+      return res.status(500).json({ error: `The key is valid but could not be saved: ${e.message}` });
+    }
     res.json({ ai: true, model: ai.MODEL() });
   });
   r.delete('/ai-key', (req, res) => { auth.setAiKey(req.user, ''); res.json({ ai: false }); });

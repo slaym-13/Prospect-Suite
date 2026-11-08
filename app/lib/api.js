@@ -41,7 +41,35 @@ function createApi(opts = {}) {
   r.post('/logout', (req, res) => { auth.clearSession(res); res.json({ ok: true }); });
   r.get('/session', (req, res) => {
     const s = auth.sessionFrom(req);
-    res.json({ user: s ? s.u : null, needsSetup: !auth.hasUsers() });
+    res.json({ user: s ? s.u : null, needsSetup: !auth.hasUsers(), allowSignup: db().settings.allowSignup !== false });
+  });
+
+  /* ----- sign-up ----- */
+  const signupHits = new Map();
+  r.post('/signup', async (req, res) => {
+    if (db().settings.allowSignup === false) return res.status(403).json({ error: 'Registration is closed. Ask an administrator for an account.' });
+
+    // A handful of accounts per address per hour is plenty for a real person.
+    const now = Date.now();
+    const hits = (signupHits.get(req.ip) || []).filter((t) => now - t < 3600000);
+    if (hits.length >= 5) return res.status(429).json({ error: 'Too many accounts created from here. Try again later.' });
+
+    const b = req.body || {};
+    const email = clip(b.email, 120).trim().toLowerCase();
+    const password = clip(b.password, 200);
+    const confirm = clip(b.confirm, 200);
+
+    if (!auth.validEmail(email)) return res.status(400).json({ error: 'Enter a valid email address.' });
+    if (password !== confirm) return res.status(400).json({ error: 'The two passwords do not match.' });
+    if (password.length < auth.MIN_PASSWORD) return res.status(400).json({ error: `The password needs at least ${auth.MIN_PASSWORD} characters.` });
+    // Say the same thing whether or not the address is taken, so this cannot be
+    // used to find out who already has an account.
+    if (auth.getUser(email)) return res.status(409).json({ error: 'That address cannot be used. Try another, or sign in.' });
+
+    try { auth.createUser(email, password); } catch (e) { return res.status(400).json({ error: e.message }); }
+    hits.push(now); signupHits.set(req.ip, hits);
+    auth.setSession(req, res, email);
+    res.status(201).json({ ok: true, user: email });
   });
   r.post('/setup', async (req, res) => {
     if (auth.hasUsers()) return res.status(403).json({ error: 'An account already exists.' });

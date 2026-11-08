@@ -570,7 +570,7 @@ pres.addSection({ title: 'Plateforme' });
     ['Pipeline', 'Tableau kanban : chaque colonne défile seule, le plateau défile horizontalement.'],
     ['Panneau entreprise', 'Contact, score détaillé, rédaction IA, envoi, journal des contacts, audit du site.'],
     ['Réglages', 'Identité, plafond d’envoi, clé IA, pondérations du score avec leur effet en direct.'],
-    ['Admin', 'Réservé aux administrateurs : comptes, droits, et correction des fiches entreprise.']
+    ['Admin', 'Réservé aux administrateurs : comptes, droits, inscriptions, et correction des fiches entreprise.']
   ];
   feats.forEach(([t, b], i) => {
     const x = M + (i % 4) * (w + 0.3);

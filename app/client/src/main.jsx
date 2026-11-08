@@ -8,6 +8,7 @@ import { AppLayout } from './components/layout/AppLayout';
 import { AppProvider } from './store/AppContext';
 
 import Login from './pages/Login';
+import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import Today from './pages/Today';
 import Companies from './pages/Companies';
@@ -21,6 +22,7 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route
           element={
             <RequireAuth>

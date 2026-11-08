@@ -57,7 +57,13 @@ sont destinés au poste local uniquement.
 > conserve est ouverte à n'importe qui. Le serveur affiche un avertissement tant
 > qu'ils sont en usage.
 
-Les comptes suivants se créent depuis la page **Admin**, ou en ligne de commande :
+Chacun peut créer son propre compte depuis la page de connexion : **Créer un compte**
+demande une adresse, un mot de passe d'au moins 10 caractères, et la confirmation de
+ce mot de passe. Les comptes créés ainsi sont toujours des utilisateurs ordinaires. Un
+administrateur peut fermer les inscriptions depuis la page Admin, ce qui masque aussi
+le lien.
+
+Les comptes peuvent aussi être créés depuis la page **Admin**, ou en ligne de commande :
 
 ```bash
 npm run create-user -- collegue@exemple.com "un mot de passe assez long"
@@ -129,7 +135,7 @@ En développement, ouvrez **http://127.0.0.1:5173** (Vite relaie `/api` vers le 
   détaillé, rédaction assistée par IA, envoi, journal des contacts, audit du site.
 - **Admin** — réservé aux administrateurs, l'onglet est masqué pour les autres.
   Gestion des comptes (ajouter, changer un mot de passe, accorder ou retirer les
-  droits, supprimer) et des fiches entreprise (corriger le nom, la catégorie,
+  droits, supprimer, ouvrir ou fermer les inscriptions) et des fiches entreprise (corriger le nom, la catégorie,
   l'adresse, le téléphone, l'email, le site, la note, le nombre d'avis ; ajouter ou
   supprimer une entreprise ; recharger le jeu de données livré).
 - **Réglages** — identité de l'expéditeur, plafond d'envoi, clé IA, pondérations du

@@ -37,7 +37,12 @@ machine only.
 > readable in the source, so any publicly reachable instance that keeps them is open
 > to anyone. The server warns on every start while they are in use.
 
-Further accounts are added from the **Admin** page, or from the terminal:
+Anyone can create their own account from the sign-in page: **Create one** asks for an
+email, a password of at least 10 characters, and a confirmation of that password. New
+accounts are always ordinary users. An administrator can close registration with the
+**Open registration** switch on the Admin page, which also hides the link.
+
+Accounts can also be added from the **Admin** page, or from the terminal:
 
 ```bash
 npm run create-user -- colleague@example.com "a long password"
@@ -106,7 +111,7 @@ header toggle overrides it.
 | **Pipeline** | A kanban board. Each column scrolls on its own so the board stays one screen tall; the board scrolls sideways for the last columns. Drag a card or use its menu, filter every column at once, overdue follow-ups first. |
 | **Outbox** | Every message the app tried to send. |
 | **Settings** | Your Gemini API key, who you are, sending limits, the scoring weights (with a live count of how many companies each change promotes) and the category tiers. |
-| **Admin** | Administrators only. Accounts (add, change password, grant or remove rights, delete) and the company records themselves (correct, add, delete, reload the dataset). |
+| **Admin** | Administrators only. Accounts (add, change password, grant or remove rights, delete, open or close registration) and the company records themselves (correct, add, delete, reload the dataset). |
 
 ### The company drawer
 

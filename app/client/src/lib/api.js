@@ -30,7 +30,7 @@ const get = (url) => request('GET', url);
 export const api = {
   session: () => get('/api/session'),
   login: (email, password) => request('POST', '/api/login', { email, password }),
-  setup: (email, password) => request('POST', '/api/setup', { email, password }),
+  signup: ({ email, password, confirm }) => request('POST', '/api/signup', { email, password, confirm }),
   logout: () => request('POST', '/api/logout', {}),
 
   config: () => get('/api/config'),
@@ -67,5 +67,6 @@ export const api = {
   adminCreateLead: (lead) => request('POST', '/api/admin/leads', lead),
   adminUpdateLead: (id, patch) => request('PATCH', `/api/admin/leads/${encodeURIComponent(id)}`, patch),
   adminDeleteLead: (id) => request('DELETE', `/api/admin/leads/${encodeURIComponent(id)}`),
-  adminReset: () => request('POST', '/api/admin/reset', { confirm: 'reset' })
+  adminReset: () => request('POST', '/api/admin/reset', { confirm: 'reset' }),
+  adminSetSignup: (enabled) => request('PATCH', '/api/admin/signup', { enabled })
 };

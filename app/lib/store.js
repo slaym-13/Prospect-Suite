@@ -20,6 +20,7 @@ const DEFAULT_SETTINGS = {
   },
   replyTo: '',
   dailyCap: 20,
+  allowSignup: true,           // whether anyone may create their own account
   // Lead scoring (ported from the Prospect Ledger). Weights are relative, not percentages.
   scoring: { weights: { fit: 30, pain: 30, reach: 15, volume: 25 }, tiers: {}, perDay: 5, icpOnly: true }
 };

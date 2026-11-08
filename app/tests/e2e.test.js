@@ -234,6 +234,47 @@ test('contact log moves the lead along and sets a follow-up date', async () => {
   assert.strictEqual((await call('DELETE', '/api/leads/P1/log/0')).json.log.length, 0);
 });
 
+test('sign-up: confirmation, validation, and the administrator switch', async () => {
+  const admin = cookie;
+  await call('POST', '/api/logout', {}); cookie = '';
+  assert.strictEqual((await call('GET', '/api/session')).json.allowSignup, true);
+
+  const signup = (body) => call('POST', '/api/signup', body);
+  const ok = { email: 'nouveau@example.com', password: 'un-mot-de-passe-long', confirm: 'un-mot-de-passe-long' };
+
+  // the two passwords must match, and the rules still apply
+  const mismatch = await signup({ ...ok, confirm: 'autre-chose-entierement' });
+  assert.strictEqual(mismatch.status, 400);
+  assert.match(mismatch.json.error, /do not match/);
+  assert.strictEqual((await signup({ ...ok, password: 'court', confirm: 'court' })).status, 400);
+  assert.strictEqual((await signup({ ...ok, email: 'pas-une-adresse' })).status, 400);
+
+  // a good one signs the person straight in, as an ordinary user
+  const created = await signup(ok);
+  assert.strictEqual(created.status, 201);
+  assert.strictEqual((await call('GET', '/api/session')).json.user, 'nouveau@example.com');
+  assert.strictEqual((await call('GET', '/api/config')).json.isAdmin, false);
+
+  // the address is taken, and the refusal does not confirm that it exists
+  await call('POST', '/api/logout', {}); cookie = '';
+  const taken = await signup(ok);
+  assert.strictEqual(taken.status, 409);
+  assert.ok(!/already|exists|taken/i.test(taken.json.error), 'the message gives nothing away');
+
+  // an administrator can close registration
+  cookie = admin;
+  assert.strictEqual((await call('PATCH', '/api/admin/signup', { enabled: 'yes' })).status, 400);
+  assert.strictEqual((await call('PATCH', '/api/admin/signup', { enabled: false })).json.allowSignup, false);
+  const closedCookie = cookie;
+  cookie = '';
+  assert.strictEqual((await call('GET', '/api/session')).json.allowSignup, false);
+  assert.strictEqual((await signup({ email: 'refuse@example.com', password: 'un-mot-de-passe-long', confirm: 'un-mot-de-passe-long' })).status, 403);
+
+  cookie = closedCookie;
+  await call('PATCH', '/api/admin/signup', { enabled: true });
+  await call('DELETE', '/api/admin/users/nouveau@example.com');
+});
+
 test('admin: the seeded administrator, accounts and records', async () => {
   // app.js seeds an administrator on every boot, so one always exists
   const me = (await call('GET', '/api/config')).json;

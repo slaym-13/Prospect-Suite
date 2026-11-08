@@ -45,7 +45,8 @@ website, category, rating and review count.
 - **Outbox** - every message the app tried to send, newest first, with the result.
 - **Admin** - administrators only, and the tab is hidden from everyone else. Three
   parts: headline counts; Accounts, to add people, change a password, grant or remove
-  administrator rights and delete an account; and Company records, to correct a
+  administrator rights, delete an account and open or close public registration with
+  the "Open registration" switch; and Company records, to correct a
   company's name, category, address, phone, email, website, rating or review count,
   add a company by hand, delete one, or reload the dataset that ships with the app.
   Editing a record there is different from the Companies page, which changes a
@@ -108,6 +109,15 @@ to every message, a List-Unsubscribe header is set, there is a daily cap (20 by
 default, change it in Settings), the app refuses to email the same company twice
 within 14 days unless you confirm, and a company marked "Do not contact" can never be
 emailed. In dry-run mode messages are logged in the Outbox but never delivered.
+
+## Signing in
+
+Each person has their own account. The sign-in page links to **Create your account**,
+which asks for an email, a password of at least 10 characters, and the password a
+second time to confirm it; the form refuses to submit while the two differ. Signing up
+puts you straight into the app as an ordinary user, never an administrator. An
+administrator can close public registration from the Admin page, and the link then
+disappears from the sign-in page.
 
 ## The AI
 

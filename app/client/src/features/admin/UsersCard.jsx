@@ -16,12 +16,14 @@ export function UsersCard() {
   const [users, setUsers] = useState([]);
   const [form, setForm] = useState(BLANK);
   const [resetting, setResetting] = useState(null);
+  const [signupOpen, setSignupOpen] = useState(true);
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     api.adminUsers().then(setUsers).catch((e) => setError(e.message));
+    api.adminStats().then((s) => setSignupOpen(s.allowSignup !== false)).catch(() => {});
   }, []);
 
   async function run(fn, done) {
@@ -56,8 +58,41 @@ export function UsersCard() {
 
   return (
     <Card>
-      <CardHeader title="Accounts" subtitle="Who can sign in, and who can reach this page." />
+      <CardHeader
+        title="Accounts"
+        subtitle="Who can sign in, and who can reach this page."
+        action={
+          <label className="flex items-center gap-2 text-[13px] text-muted">
+            <input
+              type="checkbox"
+              className="size-4 accent-accent"
+              checked={signupOpen}
+              disabled={busy}
+              onChange={async (e) => {
+                const next = e.target.checked;
+                setError('');
+                setBusy(true);
+                try {
+                  await api.adminSetSignup(next);
+                  setSignupOpen(next);
+                  toast(next ? 'Anyone can now create an account' : 'Registration closed');
+                } catch (err) {
+                  setError(err.message);
+                } finally {
+                  setBusy(false);
+                }
+              }}
+            />
+            Open registration
+          </label>
+        }
+      />
       {error && <Message tone="bad" className="mb-3">{error}</Message>}
+      {!signupOpen && (
+        <Message tone="plain" className="mb-3">
+          Registration is closed: new accounts can only be added here.
+        </Message>
+      )}
 
       <div className="overflow-x-auto rounded-xl border border-line">
         <table className="w-full border-collapse text-sm">

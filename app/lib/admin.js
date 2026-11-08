@@ -40,6 +40,7 @@ function createAdminApi() {
       sent: leads.reduce((n, l) => n + (l.sent || []).filter((s) => s.ok).length, 0),
       logged: leads.reduce((n, l) => n + (l.log || []).length, 0),
       byStatus,
+      allowSignup: store.get().settings.allowSignup !== false,
       users: auth.listUsers().length,
       admins: auth.countAdmins()
     });
@@ -84,6 +85,15 @@ function createAdminApi() {
     } catch (e) {
       res.status(e.message === 'No such account.' ? 404 : 400).json({ error: e.message });
     }
+  });
+
+  /** Open or close public registration. */
+  r.patch('/signup', (req, res) => {
+    const enabled = (req.body || {}).enabled;
+    if (typeof enabled !== 'boolean') return res.status(400).json({ error: 'Send {"enabled": true} or {"enabled": false}.' });
+    store.get().settings.allowSignup = enabled;
+    store.save();
+    res.json({ allowSignup: enabled });
   });
 
   /* ----- company records ----- */
